@@ -8,7 +8,7 @@ This plugin uses the standard module dis, allowing disassembly of python code an
 [pt-Br] Web2Py Plugin para fácil conversão de colunas virtuais lentas para colunas sql case ágeis
 Este plugin usa o módulo padrão dis, que permite a desmontagem (disassembly) do código python e a construção de colunas case em sql
 
-Ex:
+Eg. (Ex):
 
 ```python
 def main():
@@ -20,7 +20,15 @@ def main():
       return 'B'
     else:
       return 'C'
-  
+
+print(db()._select(db.mytable.ALL, Case(myfunc))
+```
+
+```sql
+SELECT CASE WHEN (mytable.myfield = 0) THEN 'A' ELSE CASE WHEN (mytable.myfield == 1) THEN 'B' ELSE 'C' END END FROM mytable
+````
+
+```python
   def myfunc1():
     if db.mytable.myfield == 0:
       if db.mytable.myfield1 == 'a':
@@ -28,14 +36,22 @@ def main():
       return 0
     return False
 
-  db().select(db.mytable.ALL, Case(myfunc), Case(myfunc))
+  print db()._select(db.mytable.ALL, Case(myfunc1))
 ```
-
-The function code is evaluated and transformed in case below.
-
-[pt-Br] O código da função será avaliado e transformado no case abaixo
 
 ```sql
-CASE WHEN (mytable.myfield = 0) THEN 'A' ELSE CASE WHEN (mytable.myfield == 1) THEN 'B' ELSE 'C' END END,
-CASE WHEN (mytable.myfield = 0) THEN CASE WHEN (mytable.myfield1 == 1) THEN 1 ELSE 0 END ELSE 'False' END
+SELECT CASE WHEN (mytable.myfield = 0) THEN CASE WHEN (mytable.myfield1 == 1) THEN 1 ELSE 0 END ELSE 'F' END FROM mytable
 ```
+
+```python
+def myfunc3():
+  if db.mytable.myfield >= 5 or db.mytable.field < 2 :
+    if db.mytable.myfiedl1 == 0 and db.mytable.myfield2 == 1:
+      return 2
+    return 3
+  return 1
+
+```
+
+```sql
+SELECT CASE WHEN ((mytable.myfield >= 5) OR (mytable.myfield < 2)) THEN CASE WHEN ((mytable.myfield1 == 0) AND (mytable.myfield2 == 1) THEN 2 ELSE 3 END ELSE 1 END FROM mytable
