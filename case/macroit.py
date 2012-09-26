@@ -119,6 +119,8 @@ class FuncInterpreter(object):
         self.locals[varname] = w_newvalue
 
     def POP_TOP(self):
+        if self.condstack:
+            self.condstack.pop()
         self.stack.pop()
 
     def ROT_TWO(self):

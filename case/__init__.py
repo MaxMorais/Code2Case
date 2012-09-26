@@ -130,16 +130,18 @@ class Case(Expression,FuncInterpreter):
         if cond:
             self.next_instr += stepby
 
-    def POP_JUMP_IF_FALSE(self, jumpto):
+    def POP_JUMP_IF_TRUE(self, stepby):
         cond = self.stack[-1]
-        if (isinstance(cond, Expr)):
-            return self.jump_it(jumpto, cond)
-        if not cond:
-            self.next_instr = jumpto
+        if (isinstance(cond, sqlabstr.Condition)):
+            return self.jump_it(stepby, cond)
+        if cond:
+            self.next_instr = stepby
+            self.POP_TOP()
 
-    def POP_JUMP_IF_TRUE(self, jumpto):
+    def POP_JUMP_IF_FALSE(self, stepby):
         cond = self.stack[-1]
-        if (isinstance(cond, Expr)):
-            return self.jump_it(jumpto, ~cond)
+        if (isinstance(Cond, sqlabstr.Condition)):
+            return self.jump_it(stepby, ~cond)
         if not cond:
-            self.next_instr = jumpto
+            self.next_instr = stepby
+            self.POP_TOP()
