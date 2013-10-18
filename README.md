@@ -25,7 +25,7 @@ print(db()._select(db.mytable.ALL, Case(myfunc))
 ```
 
 ```sql
-SELECT CASE WHEN (mytable.myfield = 0) THEN 'A' ELSE CASE WHEN (mytable.myfield == 1) THEN 'B' ELSE 'C' END END FROM mytable
+SELECT CASE WHEN (mytable.myfield = 0) THEN 'A' ELSE CASE WHEN (mytable.myfield == 1) THEN 'B' ELSE 'C' END END AS myfunc FROM mytable
 ````
 
 ```python
@@ -35,12 +35,14 @@ SELECT CASE WHEN (mytable.myfield = 0) THEN 'A' ELSE CASE WHEN (mytable.myfield 
         return 1
       return 0
     return False
+  myCol = Case(myfunc1)
+  myCol << "other_name"
 
-  print db()._select(db.mytable.ALL, Case(myfunc1))
+  print db()._select(db.mytable.ALL, myCol)
 ```
 
 ```sql
-SELECT CASE WHEN (mytable.myfield = 0) THEN CASE WHEN (mytable.myfield1 == 1) THEN 1 ELSE 0 END ELSE 'F' END FROM mytable
+SELECT CASE WHEN (mytable.myfield = 0) THEN CASE WHEN (mytable.myfield1 == 1) THEN 1 ELSE 0 END ELSE 'F' END AS other_name FROM mytable
 ```
 
 ```python
@@ -54,4 +56,4 @@ def myfunc3():
 ```
 
 ```sql
-SELECT CASE WHEN ((mytable.myfield >= 5) OR (mytable.myfield < 2)) THEN CASE WHEN ((mytable.myfield1 == 0) AND (mytable.myfield2 == 1) THEN 2 ELSE 3 END ELSE 1 END FROM mytable
+SELECT CASE WHEN ((mytable.myfield >= 5) OR (mytable.myfield < 2)) THEN CASE WHEN ((mytable.myfield1 == 0) AND (mytable.myfield2 == 1) THEN 2 ELSE 3 END ELSE 1 END AS myfunc3 FROM mytable
