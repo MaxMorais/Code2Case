@@ -43,6 +43,7 @@ class Case(Expression,FuncInterpreter):
         self.lastiflevel = 0
         self.lastretlevel = 0
         self.next_instr = 0
+        self.column_name = func.__name__ if hasattr(func, '__name__') else func.func_name
 
         self.run()
 
@@ -60,6 +61,9 @@ class Case(Expression,FuncInterpreter):
     def __str__(self):
         return self.sql()
 
+    def __lshift__(self, other):
+        self._column_name = other
+
     def sql(self,aliases):
         text = ''
         params = []
@@ -73,6 +77,7 @@ class Case(Expression,FuncInterpreter):
             else:
                 text += '%s '
                 params.append(val)
+        text += ' AS %s'%self.column_name
         return text % params
 
     def RETURN_VALUE(self):
